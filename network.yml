@@ -1,0 +1,5 @@
+version: '3.7'
+
+networks:
+  elastic-network-application:
+    driver: bridge
