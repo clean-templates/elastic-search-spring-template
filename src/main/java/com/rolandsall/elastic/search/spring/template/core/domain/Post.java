@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -16,6 +17,9 @@ public class Post {
     private String id;
     private Owner owner;
     private String content;
+    private List<String> topic;
     private ZonedDateTime createdAt;
-    private List<Comment> replies;
+
+    @Builder.Default
+    private List<Comment> replies = new ArrayList<>();
 }

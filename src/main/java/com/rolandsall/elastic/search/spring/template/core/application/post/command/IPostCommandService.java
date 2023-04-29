@@ -1,8 +1,8 @@
 package com.rolandsall.elastic.search.spring.template.core.application.post.command;
 
-import com.rolandsall.elastic.search.spring.template.core.domain.Post;
+import com.rolandsall.elastic.search.spring.template.core.application.post.command.dto.PostRequest;
 
 public interface IPostCommandService {
 
-    void addPost(Post post);
+    void addPost(PostRequest post);
 }
