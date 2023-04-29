@@ -16,10 +16,11 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
         }
 )
 public class ElasticSearchSpringTemplateServiceArchitectureTest {
-    private static final String CORE_PACKAGE = "..core..";
-    private static final String API_PACKAGE = "..api..";
-    private static final String CONFIG_PACKAGE = "..config..";
-    private static final String INFRA_PACKAGE = "..infra..";
+    private static final String CORE_PACKAGE = "..elastic.search.spring.template.core..";
+    private static final String API_PACKAGE = "..elastic.search.spring.template.api..";
+    private static final String CONFIG_PACKAGE = "..elastic.search.spring.template.config..";
+    private static final String INFRA_PACKAGE = "..elastic.search.spring.template.infra..";
+    private static final String JAVA_PACKAGE = "..java..";
 
 
     @ArchTest
@@ -39,7 +40,7 @@ public class ElasticSearchSpringTemplateServiceArchitectureTest {
                 .that().resideInAPackage(CORE_PACKAGE)
                 .should()
                 .dependOnClassesThat()
-                .resideInAnyPackage(CORE_PACKAGE)
+                .resideInAnyPackage(CORE_PACKAGE, JAVA_PACKAGE)
                 .because("core domain cannot depend on other layers")
                 .check(javaClasses);
     }
