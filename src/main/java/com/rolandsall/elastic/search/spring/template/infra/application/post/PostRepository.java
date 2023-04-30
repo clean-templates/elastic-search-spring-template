@@ -9,6 +9,7 @@ import com.rolandsall.elastic.search.spring.template.infra.application.post.mode
 import com.rolandsall.elastic.search.spring.template.infra.application.post.models.elastic.PostIndexModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -60,11 +61,16 @@ public class PostRepository implements IPostProvider, IPostCreator {
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
 
         for (String topic : topics) {
-            queryBuilder.should(QueryBuilders.matchQuery("topic", topic));
+            queryBuilder.should(QueryBuilders.matchQuery("topic", topic)
+                    .fuzziness(Fuzziness.AUTO)
+                    .maxExpansions(10)
+            );
+
         }
 
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(queryBuilder).build();
+                .withQuery(queryBuilder)
+                .build();
 
 
         return extractSearchResults(searchQuery);
