@@ -9,12 +9,20 @@ import com.rolandsall.elastic.search.spring.template.infra.application.post.mode
 import com.rolandsall.elastic.search.spring.template.infra.application.post.models.elastic.PostIndexModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -38,6 +46,18 @@ public class PostRepository implements IPostProvider, IPostCreator {
     @Override
     public List<Post> getAllPosts() {
         log.info("received query to retrieve all posts");
-        return null;
+        Query query = new NativeSearchQueryBuilder()
+                .withQuery(new BoolQueryBuilder()
+                        .must(QueryBuilders.matchAllQuery()))
+                .build();
+
+        SearchHits<PostIndexModel> searchResult = elasticsearchOperations.search(query, PostIndexModel.class,
+                IndexCoordinates.of(elasticConfigData.getIndexName()));
+
+        log.info("{} number of documents retrieved successfully", searchResult.getTotalHits());
+        List<PostIndexModel> posts = searchResult.get().map(SearchHit::getContent).collect(Collectors.toList());
+
+
+        return modelMapper.ToDomainModel(posts);
     }
 }
