@@ -1,0 +1,24 @@
+POST http://localhost:9200/post-index/_doc
+Content-Type: application/json
+
+{
+  "id": "post-2",
+  "owner": "JohnDoe",
+  "content": "This is my first post on Elasticsearch!",
+  "topic": "Elasticsearch",
+  "createdAt": "2023-09-29T18:46:19-0700",
+  "replies": [
+    {
+      "id": "reply-1",
+      "content": "Welcome to Elasticsearch, John!",
+      "owner": "Alain",
+      "createdAt": "2023-09-29T19:46:19-0700"
+    },
+    {
+      "id": "reply-2",
+      "content": "I agree, Elasticsearch is awesome!",
+      "owner": "BobSmith",
+      "createdAt": "2023-09-29T19:50:19-0700"
+    }
+  ]
+}

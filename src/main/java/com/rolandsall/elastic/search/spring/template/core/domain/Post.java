@@ -21,5 +21,5 @@ public class Post {
     private ZonedDateTime createdAt;
 
     @Builder.Default
-    private List<Comment> replies = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 }

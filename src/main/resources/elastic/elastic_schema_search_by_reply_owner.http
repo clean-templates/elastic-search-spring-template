@@ -1,0 +1,15 @@
+GET http://localhost:9200/post-index/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "nested": {
+      "path": "replies",
+      "query": {
+        "match": {
+          "replies.owner": "BobSmith"
+        }
+      }
+    }
+  }
+}

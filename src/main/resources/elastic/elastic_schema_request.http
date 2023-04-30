@@ -1,0 +1,43 @@
+PUT http://localhost:9200/post-index
+Content-Type: application/json
+
+{
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "owner": {
+        "type": "keyword"
+      },
+      "content": {
+        "type": "text"
+      },
+      "topic": {
+        "type": "text"
+      },
+      "createdAt": {
+        "type": "date",
+        "format": "YYYY-MM-DD'T'HH:mm:ssZ"
+      },
+      "replies": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "keyword"
+          },
+          "content": {
+            "type": "text"
+          },
+          "owner": {
+            "type": "text"
+          },
+          "createdAt": {
+            "type": "date",
+            "format": "YYYY-MM-DD'T'HH:mm:ssZ"
+          }
+        }
+      }
+    }
+  }
+}
