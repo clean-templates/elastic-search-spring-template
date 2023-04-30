@@ -51,12 +51,31 @@ public class PostRepository implements IPostProvider, IPostCreator {
                         .must(QueryBuilders.matchAllQuery()))
                 .build();
 
+        return extractSearchResults(query);
+    }
+
+    @Override
+    public List<Post> getPostByTopic(List<String> topics) {
+        log.info("received query to retrieve all posts with these topics {}", topics);
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+
+        for (String topic : topics) {
+            queryBuilder.should(QueryBuilders.matchQuery("topic", topic));
+        }
+
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(queryBuilder).build();
+
+
+        return extractSearchResults(searchQuery);
+    }
+
+    private List<Post> extractSearchResults(Query query) {
         SearchHits<PostIndexModel> searchResult = elasticsearchOperations.search(query, PostIndexModel.class,
                 IndexCoordinates.of(elasticConfigData.getIndexName()));
 
         log.info("{} number of documents retrieved successfully", searchResult.getTotalHits());
         List<PostIndexModel> posts = searchResult.get().map(SearchHit::getContent).collect(Collectors.toList());
-
 
         return modelMapper.ToDomainModel(posts);
     }

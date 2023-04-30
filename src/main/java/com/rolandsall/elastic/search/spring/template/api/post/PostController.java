@@ -31,6 +31,12 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Post>> findByTopic(@RequestParam List<String> topics){
+        List<Post> posts  = postQueryService.getPostByTopic(topics);
+        return ResponseEntity.ok(posts);
+    }
+
 
 
     private PostRequest buildPostRequestFrom(PostApiRequest postApiRequest) {

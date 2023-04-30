@@ -7,4 +7,6 @@ import java.util.List;
 public interface IPostProvider {
 
     List<Post> getAllPosts();
+
+    List<Post> getPostByTopic(List<String> topics);
 }

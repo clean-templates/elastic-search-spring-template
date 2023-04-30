@@ -7,4 +7,6 @@ import java.util.List;
 public interface IPostQueryService {
 
     List<Post> getAllPosts();
+
+    List<Post> getPostByTopic(List<String> topics);
 }
