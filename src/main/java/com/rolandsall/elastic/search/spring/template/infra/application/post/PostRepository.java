@@ -4,6 +4,7 @@ import com.rolandsall.elastic.search.spring.template.config.elastic.ElasticConfi
 import com.rolandsall.elastic.search.spring.template.core.application.exceptions.ElasticQueryClientException;
 import com.rolandsall.elastic.search.spring.template.core.application.post.command.IPostCreator;
 import com.rolandsall.elastic.search.spring.template.core.application.post.query.IPostProvider;
+import com.rolandsall.elastic.search.spring.template.core.domain.Comment;
 import com.rolandsall.elastic.search.spring.template.core.domain.Post;
 import com.rolandsall.elastic.search.spring.template.infra.application.elastic.ElasticIndexUtil;
 import com.rolandsall.elastic.search.spring.template.infra.application.post.models.ModelMapper;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -24,7 +24,6 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +44,13 @@ public class PostRepository implements IPostProvider, IPostCreator {
         IndexQuery indexQuery = elasticIndexUtil.getIndexQuery(postIndexModel);
         String index = elasticsearchOperations.index(indexQuery, IndexCoordinates.of(elasticConfigData.getIndexName()));
         log.info("document indexed successfully with type: {} and id: {}", PostIndexModel.class.getName(), index);
+    }
+
+    @Override
+    public void editPost(String postId, Comment comment) {
+        Post post = findById(postId);
+        post.getComments().add(comment);
+        addPost(post);
     }
 
     @Override

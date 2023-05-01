@@ -4,10 +4,8 @@ import com.rolandsall.elastic.search.spring.template.core.application.comment.co
 import com.rolandsall.elastic.search.spring.template.core.application.post.command.IPostCommandService;
 import com.rolandsall.elastic.search.spring.template.core.application.post.generator.PostIdGenerator;
 import com.rolandsall.elastic.search.spring.template.core.application.post.generator.PostTimeGenerator;
-import com.rolandsall.elastic.search.spring.template.core.application.post.query.IPostQueryService;
 import com.rolandsall.elastic.search.spring.template.core.domain.Comment;
 import com.rolandsall.elastic.search.spring.template.core.domain.Owner;
-import com.rolandsall.elastic.search.spring.template.core.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CommentCommandService implements ICommentCommandService {
 
-    private final IPostQueryService postQueryService;
     private final IPostCommandService postCommandService;
     private final PostIdGenerator postIdGenerator;
     private final PostTimeGenerator postTimeGenerator;
@@ -23,9 +20,8 @@ public class CommentCommandService implements ICommentCommandService {
 
     @Override
     public void addComment(String postId, CommentRequest request) {
-        Post post = postQueryService.findById(postId);
         Comment comment = buildCommentFrom(request);
-        postCommandService.updatePost(post, comment);
+        postCommandService.editPost(postId, comment);
     }
 
     private Comment buildCommentFrom(CommentRequest request) {

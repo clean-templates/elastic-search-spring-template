@@ -25,12 +25,11 @@ public class PostCommandService implements IPostCommandService {
     }
 
     @Override
-    public void updatePost(Post post, Comment comment) {
-        post.getComments().add(comment);
-        postCreator.addPost(post);
+    public void editPost(String postId, Comment comment) {
+        postCreator.editPost(postId, comment);
     }
 
-    private Post buildPostFrom(PostRequest postRequest) {
+      private Post buildPostFrom(PostRequest postRequest) {
         return Post.builder()
                 .id(postIdGenerator.generateId())
                 .content(postRequest.getContent())
