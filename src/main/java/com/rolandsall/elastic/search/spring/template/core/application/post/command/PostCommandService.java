@@ -3,16 +3,15 @@ package com.rolandsall.elastic.search.spring.template.core.application.post.comm
 import com.rolandsall.elastic.search.spring.template.core.application.post.command.dto.PostRequest;
 import com.rolandsall.elastic.search.spring.template.core.application.post.generator.PostIdGenerator;
 import com.rolandsall.elastic.search.spring.template.core.application.post.generator.PostTimeGenerator;
+import com.rolandsall.elastic.search.spring.template.core.domain.Comment;
 import com.rolandsall.elastic.search.spring.template.core.domain.Owner;
 import com.rolandsall.elastic.search.spring.template.core.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-
 @Service
 @RequiredArgsConstructor
-public class PostCommandService implements IPostCommandService{
+public class PostCommandService implements IPostCommandService {
 
     private final IPostCreator postCreator;
     private final PostIdGenerator postIdGenerator;
@@ -22,6 +21,12 @@ public class PostCommandService implements IPostCommandService{
     @Override
     public void addPost(PostRequest postRequest) {
         Post post = buildPostFrom(postRequest);
+        postCreator.addPost(post);
+    }
+
+    @Override
+    public void updatePost(Post post, Comment comment) {
+        post.getComments().add(comment);
         postCreator.addPost(post);
     }
 

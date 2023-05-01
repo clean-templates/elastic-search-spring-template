@@ -79,9 +79,12 @@ public class PostRepository implements IPostProvider, IPostCreator {
 
     @Override
     public Post findById(String postId) {
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
+                .must(QueryBuilders.matchQuery("id", postId));
+
         log.info("received query to retrieve post with id  {}", postId);
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withIds(Collections.singleton(postId))
+                .withQuery(queryBuilder)
                 .build();
 
         return extractSearchResult(postId, searchQuery);
