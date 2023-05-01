@@ -1,7 +1,7 @@
 package com.rolandsall.elastic.search.spring.template.infra.application.post;
 
 import com.rolandsall.elastic.search.spring.template.config.elastic.ElasticConfigData;
-import com.rolandsall.elastic.search.spring.template.core.application.exceptions.ElasticQueryClientException;
+import com.rolandsall.elastic.search.spring.template.core.application.exceptions.PostNotFoundException;
 import com.rolandsall.elastic.search.spring.template.core.application.post.command.IPostCreator;
 import com.rolandsall.elastic.search.spring.template.core.application.post.query.IPostProvider;
 import com.rolandsall.elastic.search.spring.template.core.domain.Comment;
@@ -47,7 +47,7 @@ public class PostRepository implements IPostProvider, IPostCreator {
     }
 
     @Override
-    public void editPost(String postId, Comment comment) throws ElasticQueryClientException {
+    public void editPost(String postId, Comment comment) throws PostNotFoundException {
         Post post = findById(postId);
         post.getComments().add(comment);
         addPost(post);
@@ -84,7 +84,7 @@ public class PostRepository implements IPostProvider, IPostCreator {
     }
 
     @Override
-    public Post findById(String postId) throws ElasticQueryClientException {
+    public Post findById(String postId) throws PostNotFoundException {
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
                 .must(QueryBuilders.matchQuery("id", postId));
 
@@ -97,13 +97,13 @@ public class PostRepository implements IPostProvider, IPostCreator {
 
     }
 
-    private Post extractSearchResult(String postId, NativeSearchQuery searchQuery) throws ElasticQueryClientException {
+    private Post extractSearchResult(String postId, NativeSearchQuery searchQuery) throws PostNotFoundException {
         SearchHit<PostIndexModel> searchResult = elasticsearchOperations.searchOne(searchQuery, PostIndexModel.class,
                 IndexCoordinates.of(elasticConfigData.getIndexName()));
 
         if (searchResult == null) {
             log.error("No document found at elasticsearch with id {}", postId);
-            throw new ElasticQueryClientException("No document found at elasticsearch with id " + postId);
+            throw new PostNotFoundException("No document found at elasticsearch with id " + postId);
         }
         log.info("Document with id {} retrieved successfully", searchResult.getId());
         return modelMapper.ToDomainModel(searchResult.getContent());

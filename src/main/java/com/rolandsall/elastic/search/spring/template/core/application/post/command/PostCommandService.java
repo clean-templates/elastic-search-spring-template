@@ -1,6 +1,6 @@
 package com.rolandsall.elastic.search.spring.template.core.application.post.command;
 
-import com.rolandsall.elastic.search.spring.template.core.application.exceptions.ElasticQueryClientException;
+import com.rolandsall.elastic.search.spring.template.core.application.exceptions.PostNotFoundException;
 import com.rolandsall.elastic.search.spring.template.core.application.post.command.dto.PostRequest;
 import com.rolandsall.elastic.search.spring.template.core.application.post.generator.PostIdGenerator;
 import com.rolandsall.elastic.search.spring.template.core.application.post.generator.PostTimeGenerator;
@@ -26,7 +26,7 @@ public class PostCommandService implements IPostCommandService {
     }
 
     @Override
-    public void editPost(String postId, Comment comment) throws ElasticQueryClientException {
+    public void editPost(String postId, Comment comment) throws PostNotFoundException {
         postCreator.editPost(postId, comment);
     }
 

@@ -1,6 +1,6 @@
 package com.rolandsall.elastic.search.spring.template.api.comment.advice;
 
-import com.rolandsall.elastic.search.spring.template.core.application.exceptions.ElasticQueryClientException;
+import com.rolandsall.elastic.search.spring.template.core.application.exceptions.PostNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +11,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class PostDoesNotExistException extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = {ElasticQueryClientException.class})
-    protected ResponseEntity<Object> handle(ElasticQueryClientException ex, WebRequest request) {
+    @ExceptionHandler(value = {PostNotFoundException.class})
+    protected ResponseEntity<Object> handle(PostNotFoundException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 }

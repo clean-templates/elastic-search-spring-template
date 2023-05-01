@@ -1,6 +1,6 @@
 package com.rolandsall.elastic.search.spring.template.core.application.post.query;
 
-import com.rolandsall.elastic.search.spring.template.core.application.exceptions.ElasticQueryClientException;
+import com.rolandsall.elastic.search.spring.template.core.application.exceptions.PostNotFoundException;
 import com.rolandsall.elastic.search.spring.template.core.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class PostQueryService implements IPostQueryService {
     }
 
     @Override
-    public Post findById(String postId) throws ElasticQueryClientException {
+    public Post findById(String postId) throws PostNotFoundException {
         return postProvider.findById(postId);
     }
 }
