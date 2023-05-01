@@ -1,6 +1,6 @@
 package com.rolandsall.elastic.search.spring.template.core.application.exceptions;
 
-public class ElasticQueryClientException extends RuntimeException{
+public class ElasticQueryClientException extends Exception{
 
     public ElasticQueryClientException() {
     }

@@ -1,5 +1,6 @@
 package com.rolandsall.elastic.search.spring.template.core.application.post.query;
 
+import com.rolandsall.elastic.search.spring.template.core.application.exceptions.ElasticQueryClientException;
 import com.rolandsall.elastic.search.spring.template.core.domain.Post;
 
 import java.util.List;
@@ -10,5 +11,5 @@ public interface IPostQueryService {
 
     List<Post> getPostByTopic(List<String> topics);
 
-    Post findById(String postId);
+    Post findById(String postId) throws ElasticQueryClientException;
 }

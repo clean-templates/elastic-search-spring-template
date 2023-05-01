@@ -47,7 +47,7 @@ public class PostRepository implements IPostProvider, IPostCreator {
     }
 
     @Override
-    public void editPost(String postId, Comment comment) {
+    public void editPost(String postId, Comment comment) throws ElasticQueryClientException {
         Post post = findById(postId);
         post.getComments().add(comment);
         addPost(post);
@@ -84,7 +84,7 @@ public class PostRepository implements IPostProvider, IPostCreator {
     }
 
     @Override
-    public Post findById(String postId) {
+    public Post findById(String postId) throws ElasticQueryClientException {
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
                 .must(QueryBuilders.matchQuery("id", postId));
 
@@ -97,7 +97,7 @@ public class PostRepository implements IPostProvider, IPostCreator {
 
     }
 
-    private Post extractSearchResult(String postId, NativeSearchQuery searchQuery) {
+    private Post extractSearchResult(String postId, NativeSearchQuery searchQuery) throws ElasticQueryClientException {
         SearchHit<PostIndexModel> searchResult = elasticsearchOperations.searchOne(searchQuery, PostIndexModel.class,
                 IndexCoordinates.of(elasticConfigData.getIndexName()));
 

@@ -1,6 +1,7 @@
 package com.rolandsall.elastic.search.spring.template.core.application.comment.command;
 
 import com.rolandsall.elastic.search.spring.template.core.application.comment.command.dto.CommentRequest;
+import com.rolandsall.elastic.search.spring.template.core.application.exceptions.ElasticQueryClientException;
 import com.rolandsall.elastic.search.spring.template.core.application.post.command.IPostCommandService;
 import com.rolandsall.elastic.search.spring.template.core.application.post.generator.PostIdGenerator;
 import com.rolandsall.elastic.search.spring.template.core.application.post.generator.PostTimeGenerator;
@@ -19,7 +20,7 @@ public class CommentCommandService implements ICommentCommandService {
 
 
     @Override
-    public void addComment(String postId, CommentRequest request) {
+    public void addComment(String postId, CommentRequest request) throws ElasticQueryClientException {
         Comment comment = buildCommentFrom(request);
         postCommandService.editPost(postId, comment);
     }
