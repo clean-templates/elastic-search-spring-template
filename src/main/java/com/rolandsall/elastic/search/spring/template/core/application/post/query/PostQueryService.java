@@ -21,4 +21,9 @@ public class PostQueryService implements IPostQueryService {
     public List<Post> getPostByTopic(List<String> topics) {
         return postProvider.getPostByTopic(topics);
     }
+
+    @Override
+    public Post findById(String postId) {
+        return postProvider.findById(postId);
+    }
 }

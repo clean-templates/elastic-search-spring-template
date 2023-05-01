@@ -1,6 +1,7 @@
 package com.rolandsall.elastic.search.spring.template.infra.application.post;
 
 import com.rolandsall.elastic.search.spring.template.config.elastic.ElasticConfigData;
+import com.rolandsall.elastic.search.spring.template.core.application.exceptions.ElasticQueryClientException;
 import com.rolandsall.elastic.search.spring.template.core.application.post.command.IPostCreator;
 import com.rolandsall.elastic.search.spring.template.core.application.post.query.IPostProvider;
 import com.rolandsall.elastic.search.spring.template.core.domain.Post;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -22,6 +24,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,13 +70,34 @@ public class PostRepository implements IPostProvider, IPostCreator {
             );
 
         }
-
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(queryBuilder)
                 .build();
 
-
         return extractSearchResults(searchQuery);
+    }
+
+    @Override
+    public Post findById(String postId) {
+        log.info("received query to retrieve post with id  {}", postId);
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withIds(Collections.singleton(postId))
+                .build();
+
+        return extractSearchResult(postId, searchQuery);
+
+    }
+
+    private Post extractSearchResult(String postId, NativeSearchQuery searchQuery) {
+        SearchHit<PostIndexModel> searchResult = elasticsearchOperations.searchOne(searchQuery, PostIndexModel.class,
+                IndexCoordinates.of(elasticConfigData.getIndexName()));
+
+        if (searchResult == null) {
+            log.error("No document found at elasticsearch with id {}", postId);
+            throw new ElasticQueryClientException("No document found at elasticsearch with id " + postId);
+        }
+        log.info("Document with id {} retrieved successfully", searchResult.getId());
+        return modelMapper.ToDomainModel(searchResult.getContent());
     }
 
     private List<Post> extractSearchResults(Query query) {

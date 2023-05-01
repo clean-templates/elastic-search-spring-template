@@ -9,4 +9,6 @@ public interface ModelMapper {
     PostIndexModel ToPersistenceEntity(Post post);
 
     List<Post> ToDomainModel(List<PostIndexModel> posts);
+
+    Post ToDomainModel(PostIndexModel post);
 }

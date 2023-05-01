@@ -29,21 +29,26 @@ public class ElasticModelMapper implements ModelMapper {
     @Override
     public List<Post> ToDomainModel(List<PostIndexModel> posts) {
         return posts.stream()
-                .map(post -> Post.builder()
-                        .id(post.getId())
-                        .owner(new Owner(post.getOwner()))
-                        .content(post.getContent())
-                        .topic(post.getTopic())
-                        .createdAt(post.getCreatedAt())
-                        .comments(post.getReplies().stream()
-                                .map(reply -> Comment.builder()
-                                        .id(reply.getId())
-                                        .owner(new Owner(reply.getOwner()))
-                                        .content(reply.getContent())
-                                        .createdAt(reply.getCreatedAt())
-                                        .build())
-                                .collect(Collectors.toList()))
-                        .build())
+                .map(this::ToDomainModel)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Post ToDomainModel(PostIndexModel post) {
+        return Post.builder()
+                .id(post.getId())
+                .owner(new Owner(post.getOwner()))
+                .content(post.getContent())
+                .topic(post.getTopic())
+                .createdAt(post.getCreatedAt())
+                .comments(post.getReplies().stream()
+                        .map(reply -> Comment.builder()
+                                .id(reply.getId())
+                                .owner(new Owner(reply.getOwner()))
+                                .content(reply.getContent())
+                                .createdAt(reply.getCreatedAt())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
     }
 }

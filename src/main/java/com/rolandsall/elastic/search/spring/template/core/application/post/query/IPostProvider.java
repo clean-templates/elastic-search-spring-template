@@ -9,4 +9,6 @@ public interface IPostProvider {
     List<Post> getAllPosts();
 
     List<Post> getPostByTopic(List<String> topics);
+
+    Post findById(String postId);
 }
